@@ -17,22 +17,20 @@
         </div>
         <button onclick="requestAuth()"> Auth</button>
     </div>
-    <div id="nowPlaying">
-        <img id="albumImage" src="" alt="Album Art" width="300">
-        <h2 id="songName">Song name</h2>
-        <p id="artistName">Artist name</p>
+    <div id = "playbackSection">
+        <div id="trackDetails">
+            <img id="albumImage" src="" alt="Album Art" width="300">
+            <h2 id="songName">Song name</h2>
+            <p id="artistName">Artist</p>
+        </div>
+          
+        <div id="trackControls">
+            <button type = "button" onclick="previous()"> Previous</button>
+            <button type = "button" onclick="playPause()"> Play/Pause</button>
+            <button type = "button" onclick="next()"> Next</button>
+        </div>
     </div>
-      
-    <div id="playbackControlSection">
-        This is the playbackControlSection
-        <button type = "button" onclick="currentlyPlaying()"> Currently playing</button>
-        <button type = "button" onclick="syncPlayback()"> Playback syncing</button>
-        <button type = "button" onclick="previous()"> Previous</button>
-        <button type = "button" onclick="play()"> Play</button>
-        <button type = "button" onclick="next()"> Next</button>
-        <button type = "button" onclick="pause()"> Pause</button>
-        
-    </div>
+    
 </body>
 
 </html>

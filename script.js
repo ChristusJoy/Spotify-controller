@@ -9,6 +9,7 @@ var refresh_token = null;
 var nextSongName = null;
 var nextAlbumImage = null;
 var nextArtistName = null;
+var playbackState = null;
 
 //Endpoint URLs
 
@@ -27,10 +28,11 @@ function onPageLoad(){
         access_token = localStorage.getItem("access_token");
         if ( access_token == null ){
             console.log("No access token found. Requesting authorization..."); 
+            document.getElementById("tokenSection").style.display = 'block'; 
         }
         else {
-            setTimeout(currentlyPlaying, 2000); 
-            
+            setInterval(currentlyPlaying, 2000);
+            document.getElementById("deviceSection").style.display = 'block'; 
         }
     }
 }
@@ -135,6 +137,7 @@ function handleCurrentlyPlayingResponse(){
         albumImage = data.item.album.images[0].url;
         songName = data.item.name;
         artistName = data.item.artists[0].name;
+        playbackState = data.is_playing;
         document.getElementById("albumImage").src = albumImage;
         document.getElementById("songName").textContent = songName;
         document.getElementById("artistName").textContent = artistName;
@@ -153,18 +156,17 @@ function handleCurrentlyPlayingResponse(){
         alert(this.responseText);
     }
 }
-function play() {
-    const body = {
-        position_ms: 0
-    };
 
-    callApi("PUT", PLAYER + '/play', JSON.stringify(body), handleApiResponse);
+function playPause(){
+    if ( playbackState == true ){
+        callApi( "PUT", PLAYER+'/pause', null, handleApiResponse );
+        playbackState = false;
+    }
+    else {
+        callApi("PUT", PLAYER + '/play', null, handleApiResponse);
+        playbackState = true;
+    }
 }
-
-function pause(){
-    callApi( "PUT", PLAYER+'/pause', null, handleApiResponse );
-}
-
 function next(){
     callApi( "POST", PLAYER+'/next', null, handleNextResponse );
 }
@@ -235,6 +237,3 @@ function handleNextResponse(){
     }
 }
 
-function syncPlayback(){
-    setInterval(currentlyPlaying, 2000);
-}
