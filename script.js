@@ -2,7 +2,6 @@ var redirect_uri = "https://spotify-controller-three.vercel.app"; //Change to yo
 var client_id = ""; 
 var client_secret = "";
 
-
 var access_token = "";
 var refresh_token = null;
 
