@@ -1,4 +1,4 @@
-var redirect_uri = "http://127.0.0.1:5000"; //Change to your redirect URI
+var redirect_uri = "https://spotify-controller-three.vercel.app"; //Change to your redirect URI
 var client_id = ""; 
 var client_secret = "";
 
