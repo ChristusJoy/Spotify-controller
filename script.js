@@ -36,7 +36,7 @@ function onPageLoad(){
 }
 
 function requestAuth(){
-    const scope = "user-read-currently-playing user-modify-playback-state";
+    const scope = "user-read-currently-playing user-modify-playback-state user-read-playback-state";
     client_id = document.getElementById("clientId").value;
     client_secret = document.getElementById("clientSecret").value;
     localStorage.setItem("client_id", client_id);
@@ -132,14 +132,9 @@ function currentlyPlaying(){
 function handleCurrentlyPlayingResponse(){
     if ( this.status == 200 ){
         var data = JSON.parse(this.responseText);
-        console.log(data);
-        
         albumImage = data.item.album.images[0].url;
         songName = data.item.name;
         artistName = data.item.artists[0].name;
-        if (songName == nextSongName) {
-            return;
-        }
         document.getElementById("albumImage").src = albumImage;
         document.getElementById("songName").textContent = songName;
         document.getElementById("artistName").textContent = artistName;
@@ -204,13 +199,10 @@ function getQueue(){
 function handleQueueResponse(){
     if ( this.status == 200 ){
         var data = JSON.parse(this.responseText);
-        console.log(data);
         nextSongName = data.queue[0].name;
         nextAlbumImage = data.queue[0].album.images[0].url;
         nextArtistName = data.queue[0].artists[0].name;
-        console.log(nextSongName);
-        console.log(nextAlbumImage);
-        console.log(nextArtistName);
+        console.log("Next song loaded");
     }
     else if ( this.status == 401 ){
         refreshAccessToken()
@@ -226,7 +218,7 @@ function handleNextResponse(){
         document.getElementById("albumImage").src = nextAlbumImage;
         document.getElementById("songName").textContent = nextSongName;
         document.getElementById("artistName").textContent = nextArtistName;
-        handleCurrentlyPlayingResponse();
+        setTimeout(currentlyPlaying, 2500);
         getQueue();
 
     }
@@ -241,4 +233,8 @@ function handleNextResponse(){
         console.log(this.responseText);
         alert(this.responseText);
     }
+}
+
+function syncPlayback(){
+    setInterval(currentlyPlaying, 2000);
 }
