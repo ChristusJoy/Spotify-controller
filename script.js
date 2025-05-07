@@ -6,6 +6,9 @@ var client_secret = "";
 var access_token = "";
 var refresh_token = null;
 
+var nextSongName = null;
+var nextAlbumImage = null;
+var nextArtistName = null;
 
 //Endpoint URLs
 
@@ -130,14 +133,17 @@ function handleCurrentlyPlayingResponse(){
     if ( this.status == 200 ){
         var data = JSON.parse(this.responseText);
         console.log(data);
+        
         albumImage = data.item.album.images[0].url;
         songName = data.item.name;
         artistName = data.item.artists[0].name;
-        deviceId = data.device.id;
+        if (songName == nextSongName) {
+            return;
+        }
         document.getElementById("albumImage").src = albumImage;
         document.getElementById("songName").textContent = songName;
         document.getElementById("artistName").textContent = artistName;
-        
+        getQueue();
 
     }
     else if ( this.status == 204 ){
@@ -146,7 +152,6 @@ function handleCurrentlyPlayingResponse(){
     else if ( this.status == 401 ){
         console.log("Token expired. Refreshing...");
         refreshAccessToken()
-        currentlyPlaying();
     }
     else {
         console.log(this.responseText);
@@ -166,7 +171,7 @@ function pause(){
 }
 
 function next(){
-    callApi( "POST", PLAYER+'/next', null, handleApiResponse );
+    callApi( "POST", PLAYER+'/next', null, handleNextResponse );
 }
 
 function previous(){
@@ -188,4 +193,52 @@ function handleApiResponse(){
         console.log(this.responseText);
         alert(this.responseText);
     }    
+}
+
+//Optional preloading next song to improve playback
+
+function getQueue(){
+    callApi( "GET", PLAYER + "/queue", null, handleQueueResponse );
+}
+
+function handleQueueResponse(){
+    if ( this.status == 200 ){
+        var data = JSON.parse(this.responseText);
+        console.log(data);
+        nextSongName = data.queue[0].name;
+        nextAlbumImage = data.queue[0].album.images[0].url;
+        nextArtistName = data.queue[0].artists[0].name;
+        console.log(nextSongName);
+        console.log(nextAlbumImage);
+        console.log(nextArtistName);
+    }
+    else if ( this.status == 401 ){
+        refreshAccessToken()
+    }
+    else {
+        console.log(this.responseText);
+        alert(this.responseText);
+    }
+}
+
+function handleNextResponse(){
+    if ( this.status == 200 ){
+        document.getElementById("albumImage").src = nextAlbumImage;
+        document.getElementById("songName").textContent = nextSongName;
+        document.getElementById("artistName").textContent = nextArtistName;
+        handleCurrentlyPlayingResponse();
+        getQueue();
+
+    }
+    else if ( this.status == 204 ){
+        console.log("No track is currently playing.");
+    }
+    else if ( this.status == 401 ){
+        console.log("Token expired. Refreshing...");
+        refreshAccessToken()
+    }
+    else {
+        console.log(this.responseText);
+        alert(this.responseText);
+    }
 }
