@@ -6,7 +6,7 @@ var client_secret = "";
 var access_token = "";
 var refresh_token = null;
 
-var deviceId = null;
+
 //Endpoint URLs
 
 const AUTHORIZE = "https://accounts.spotify.com/authorize"
@@ -23,11 +23,11 @@ function onPageLoad(){
     else{
         access_token = localStorage.getItem("access_token");
         if ( access_token == null ){
-            document.getElementById("getTokenSection").style.display = 'block';  
+            console.log("No access token found. Requesting authorization..."); 
         }
         else {
-            document.getElementById("playbackControlSection").style.display = 'block';  
-            currentlyPlaying();
+            setTimeout(currentlyPlaying, 2000); 
+            
         }
     }
 }
@@ -137,6 +137,7 @@ function handleCurrentlyPlayingResponse(){
         document.getElementById("albumImage").src = albumImage;
         document.getElementById("songName").textContent = songName;
         document.getElementById("artistName").textContent = artistName;
+        
 
     }
     else if ( this.status == 204 ){
@@ -152,22 +153,14 @@ function handleCurrentlyPlayingResponse(){
         alert(this.responseText);
     }
 }
-function play(){
-    let playlist_id = document.getElementById("playlists").value;
-    let trackindex = document.getElementById("tracks").value;
-    let album = document.getElementById("album").value;
-    let body = {};
-    if ( album.length > 0 ){
-        body.context_uri = album;
-    }
-    else{
-        body.context_uri = "spotify:playlist:" + playlist_id;
-    }
-    body.offset = {};
-    body.offset.position = trackindex.length > 0 ? Number(trackindex) : 0;
-    body.offset.position_ms = 0;
-    callApi( "PUT", PLAYER+'/play' + "?device_id=" + deviceId(), JSON.stringify(body), handleApiResponse );
+function play() {
+    const body = {
+        position_ms: 0
+    };
+
+    callApi("PUT", PLAYER + '/play', JSON.stringify(body), handleApiResponse);
 }
+
 function pause(){
     callApi( "PUT", PLAYER+'/pause', null, handleApiResponse );
 }
