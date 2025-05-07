@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spotify Api test</title>
+    <link href="style.css" rel="stylesheet" />
+    <script src="script.js"></script>
+</head>
+
+<body onload="onPageLoad()">
+    <div id="getTokenSection">
+        <div class="col">
+            <input type="text" class="form-control" id="clientId" placeholder="client id" />
+            <input type="text" class="form-control" id="clientSecret" placeholder="client secret" />
+        </div>
+        <button onclick="requestAuth()"> Auth</button>
+    </div>
+    <div id="nowPlaying">
+        <img id="albumImage" src="" alt="Album Art" width="300">
+        <h2 id="songName">Song name</h2>
+        <p id="artistName">Artist name</p>
+    </div>
+      
+    <div id="playbackControlSection">
+        This is the playbackControlSection
+        <button type = "button" onclick="currentlyPlaying()"> Currently playing</button>
+        <button type = "button" onclick="previous()"> Previous</button>
+        <button type = "button" onclick="play()"> Play</button>
+        <button type = "button" onclick="next()"> Next</button>
+        <button type = "button" onclick="pause()"> Pause</button>
+        
+    </div>
+</body>
+
+</html>
