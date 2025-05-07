@@ -28,7 +28,7 @@ function onPageLoad(){
         access_token = localStorage.getItem("access_token");
         if ( access_token == null ){
             console.log("No access token found. Requesting authorization..."); 
-            document.getElementById("tokenSection").style.display = 'block'; 
+            document.getElementById("getTokenSection").style.display = 'block'; 
         }
         else {
             setInterval(currentlyPlaying, 2000);
